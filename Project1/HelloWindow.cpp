@@ -33,12 +33,28 @@ float SC_RED = 1.0f;
 float SC_GREEN = 1.0f;
 float SC_BLUE = 1.0f;
 float SC_ALPHA = 1.0f;
-float ambientLight = .2f;
+
+float ambientLight = 0.2f;
 float specularLight = 0.2f;
 float diffuseLight = 0.2f;
+
 bool wireframe = false;
 bool vsync = true;
 bool depthtest = true;
+
+
+float pyramidpos1 = 0.2f;
+float pyramidpos2 = 0.2f;
+float pyramidpos3 = 0.2f;
+float pyramidscale = 1.0f;
+float pyramidrotation = 0.0f;
+
+float lightpos1 = 0.2f;
+float lightpos2 = 1.2f;
+float lightpos3 = 1.2f;
+float lightscale = 1.0f;
+float lightrotation = 0.0f;
+
 // Vertices coordinates
 GLfloat vertices[] =
 { //     COORDINATES     /        COLORS          /    TexCoord   /        NORMALS       //
@@ -152,8 +168,6 @@ int main()
 	// In this case the viewport goes from x = 0, y = 0, to x = 800, y = 800
 	glViewport(0, 0, width, height);
 
-
-
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("default.vert", "default.frag");
 	const int specularLighting = glGetUniformLocation(shaderProgram.ID, "specularLight");
@@ -176,7 +190,6 @@ int main()
 	VBO1.Unbind();
 	EBO1.Unbind();
 
-
 	// Shader for light cube
 	Shader lightShader("light.vert", "light.frag");
 	// Generates Vertex Array Object and binds it
@@ -193,33 +206,12 @@ int main()
 	lightVBO.Unbind();
 	lightEBO.Unbind();
 
-
-
-	
-
-
-
-	/*
-	* I'm doing this relative path thing in order to centralize all the resources into one folder and not
-	* duplicate them between tutorial folders. You can just copy paste the resources from the 'Resources'
-	* folder and then give a relative path from this folder to whatever resource you want to get to.
-	* Also note that this requires C++17, so go to Project Properties, C/C++, Language, and select C++17
-	*/
 	std::string parentDir = (fs::current_path().fs::path::parent_path()).string();
 	std::string texPath = "/Textures/";
 
 	// Texture
 	Texture lunaTex((parentDir + texPath + "luna.png").c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
 	lunaTex.texUnit(shaderProgram, "tex0", 0);
-
-	// Original code from the tutorial
-	/*Texture brickTex("brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-	brickTex.texUnit(shaderProgram, "tex0", 0);*/
-
-
-
-	// Enables the Depth Buffer
-	
 	
 	// Creates camera object
 	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
@@ -229,72 +221,92 @@ int main()
 	{
 		glfwSwapInterval(vsync);
 		glm::vec4 lightColor = glm::vec4(SC_RED, SC_GREEN, SC_BLUE, SC_ALPHA);
-		glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
-		glm::mat4 lightModel = glm::mat4(1.0f);
+		glm::vec3 lightPos = glm::vec3(lightpos1, lightpos2, lightpos3);
+		glm::mat4 lightModel = glm::mat4(lightscale);
+		lightModel = glm::rotate(lightModel, glm::radians(lightrotation), glm::vec3(lightpos1, lightpos2, lightpos3));
 		lightModel = glm::translate(lightModel, lightPos);
 
-		glm::vec3 pyramidPos = glm::vec3(0.0f, 0.0f, 0.0f);
-		glm::mat4 pyramidModel = glm::mat4(1.0f);
+		glm::vec3 pyramidPos = glm::vec3(pyramidpos1, pyramidpos2, pyramidpos3);
+		glm::mat4 pyramidModel = glm::mat4(pyramidscale);
+		pyramidModel = glm::rotate(pyramidModel, glm::radians(pyramidrotation), glm::vec3(pyramidpos1, pyramidpos2, pyramidpos3));
 		pyramidModel = glm::translate(pyramidModel, pyramidPos);
-
 
 		lightShader.Activate();
 		glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightModel));
 		glUniform4f(glGetUniformLocation(lightShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+
 		shaderProgram.Activate();
 		glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(pyramidModel));
 		glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 		glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
-
 
 		if (glfwGetWindowAttrib(window, GLFW_ICONIFIED) != 0)
 		{
 			ImGui_ImplGlfw_Sleep(10);
 			continue;
 		}
-
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 		ImGui::SetWindowPos(ImVec2(io.DisplaySize.x / 2 - ImGui::GetWindowWidth() / 2, 0));
 		ImGui::SetWindowSize(ImVec2(800, 800));
-		if (ImGui::Begin("Colors"))
+		if (ImGui::Begin("Menu"))
 		{
-			ImGui::Text("------------------------- Background Colour --------------------------------------------------");
-			ImGui::SliderFloat("BG_Red", &BG_RED, 0.0f, 1.0f);
-			ImGui::SliderFloat("BG_Green", &BG_GREEN, 0.0f, 1.0f);
-			ImGui::SliderFloat("BG_Blue", &BG_BLUE, 0.0f, 1.0f);
-			ImGui::SliderFloat("BG_Alpha", &BG_ALPHA, 0.0f, 1.0f);
+			if (ImGui::CollapsingHeader("------------------------- Background Colour --------------------------------------------------"))
+			{
+				ImGui::SliderFloat("BG_Red", &BG_RED, 0.0f, 1.0f);
+				ImGui::SliderFloat("BG_Green", &BG_GREEN, 0.0f, 1.0f);
+				ImGui::SliderFloat("BG_Blue", &BG_BLUE, 0.0f, 1.0f);
+				ImGui::SliderFloat("BG_Alpha", &BG_ALPHA, 0.0f, 1.0f);
+			}
+			if (ImGui::CollapsingHeader("------------------------- Light Colour --------------------------------------------------"))
+			{
+				ImGui::SliderFloat("SC_Red", &SC_RED, 0.0f, 1.0f);
+				ImGui::SliderFloat("SC_Green", &SC_GREEN, 0.0f, 1.0f);
+				ImGui::SliderFloat("SC_Blue", &SC_BLUE, 0.0f, 1.0f);
+				ImGui::SliderFloat("SC_Alpha", &SC_ALPHA, 0.0f, 1.0f);
+			}
+			if (ImGui::CollapsingHeader("------------------------- Options --------------------------------------------------"))
+			{
+				ImGui::Checkbox("wireframe", &wireframe);
+				ImGui::Checkbox("vsync", &vsync);
+				ImGui::Checkbox("depth_test", &depthtest);
+			}
+			if (ImGui::CollapsingHeader("------------------------- Lighting --------------------------------------------------"))
+			{
+				if (ImGui::SliderFloat("Ambient_Light", &ambientLight, 0.0f, 1.0f))
+				{
+					glUniform1f(ambientLighting, ambientLight);
+				}
+				if (ImGui::SliderFloat("Diffuse_Light", &diffuseLight, 0.0f, 1.0f))
+				{
 
-			ImGui::Text("------------------------- Shape Colour --------------------------------------------------");
+					glUniform1f(diffuseLighting, diffuseLight);
+				}
+				if (ImGui::SliderFloat("Specular_Light", &specularLight, 0.0f, 1.0f))
+				{
 
-			ImGui::SliderFloat("SC_Red", &SC_RED, 0.0f, 1.0f);
-			ImGui::SliderFloat("SC_Green", &SC_GREEN, 0.0f, 1.0f);
-			ImGui::SliderFloat("SC_Blue", &SC_BLUE, 0.0f, 1.0f);
-			ImGui::SliderFloat("SC_Alpha", &SC_ALPHA, 0.0f, 1.0f);
-			ImGui::Text("------------------------- Options --------------------------------------------------");
-			ImGui::Checkbox("wireframe", &wireframe);
-			ImGui::Checkbox("vsync", &vsync);
-			ImGui::Checkbox("depth_test", &depthtest);
-			ImGui::Text("------------------------- Lighting --------------------------------------------------");
-			if (ImGui::SliderFloat("Ambient_Light", &ambientLight, 0.0f, 1.0f))
-			{
-				glUniform1f(ambientLighting, ambientLight);
+					glUniform1f(specularLighting, specularLight);
+				}
 			}
-			if (ImGui::SliderFloat("Diffuse_Light", &diffuseLight, 0.0f, 1.0f))
+			if (ImGui::CollapsingHeader("------------------------- pyramid Position --------------------------------------------------"))
 			{
-				
-				glUniform1f(diffuseLighting, diffuseLight);
+				ImGui::SliderFloat("pyramid-Position X Axis", &pyramidpos1, -10.0f, 10.0f);
+				ImGui::SliderFloat("pyramid-Position Y Axis", &pyramidpos2, -10.0f, 10.0f);
+				ImGui::SliderFloat("pyramid-Position Z Axis", &pyramidpos3, -10.0f, 10.0f);
+				ImGui::SliderFloat("pyramid-Scale Axis", &pyramidscale, -10.0f, 10.0f);
+				ImGui::SliderFloat("pyramid-Rotation", &pyramidrotation, -360.0f, 360.0f);
 			}
-			if (ImGui::SliderFloat("Specular_Light", &specularLight, 0.0f, 1.0f))
+			if (ImGui::CollapsingHeader("------------------------- Light Position --------------------------------------------------"))
 			{
-			
-				glUniform1f(specularLighting, specularLight);
+				ImGui::SliderFloat("Light-position X axis", &lightpos1, -10.0f, 10.0f);
+				ImGui::SliderFloat("Light-position Y axis", &lightpos2, -10.0f, 10.0f);
+				ImGui::SliderFloat("Light-position Z axis", &lightpos3, -10.0f, 10.0f);
+				ImGui::SliderFloat("Light-Scale", &lightscale, -10.0f, 10.0f);
+				ImGui::SliderFloat("Light-Rotation", &lightrotation, -360.0f, 360.0f);
 			}
-			
 		}ImGui::End();
-
 
 		// Rendering
 		ImGui::Render();
@@ -328,7 +340,6 @@ int main()
 		// Updates and exports the camera matrix to the Vertex Shader
 		camera.updateMatrix(45.0f, 0.1f, 100.0f);
 
-
 		// Tells OpenGL which Shader Program we want to use
 		shaderProgram.Activate();
 		// Exports the camera Position to the Fragment Shader for specular lighting
@@ -341,14 +352,6 @@ int main()
 		VAO1.Bind();
 		// Draw primitives, number of indices, datatype of indices, index of indices
 		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
-
-		shaderProgram.Activate();
-		int ambientLighting = glGetUniformLocation(shaderProgram.ID, "ambientLight");
-		glUniform1f(ambientLighting, ambientLight);
-		int specularLighting = glGetUniformLocation(shaderProgram.ID, "specularLight");
-		glUniform1f(specularLighting, specularLight);
-		int diffuseLighting = glGetUniformLocation(shaderProgram.ID, "diffuseLight");
-		glUniform1f(diffuseLighting, diffuseLight);
 
 		// Tells OpenGL which Shader Program we want to use
 		lightShader.Activate();
@@ -365,8 +368,6 @@ int main()
 		// Take care of all GLFW events
 		glfwPollEvents();
 	}
-
-
 
 	// Delete all the objects we've created
 	VAO1.Delete();

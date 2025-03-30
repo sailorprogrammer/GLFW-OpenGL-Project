@@ -31,7 +31,6 @@ void main()
 	crntPos = vec3(model * vec4(aPos, 1.0f));
 	// Outputs the positions/coordinates of all vertices
 	gl_Position = camMatrix * vec4(crntPos, 1.0);
-
 	// Assigns the colors from the Vertex Data to "color"
 	color = aColor;
 	// Assigns the texture coordinates from the Vertex Data to "texCoord"
