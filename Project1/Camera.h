@@ -27,7 +27,7 @@ public:
 	int height;
 
 	// Adjust the speed of the camera and it's sensitivity when looking around
-	float speed = 0.0001f;
+	float speed = 0.0001;
 	float sensitivity = 100.0f;
 
 	// Camera constructor to set up initial values
@@ -37,6 +37,6 @@ public:
 	void updateMatrix(float FOVdeg, float nearPlane, float farPlane);
 	void Matrix(Shader& shader, const char* uniform);
 	// Handles camera inputs
-	void Inputs(GLFWwindow* window);
+	void Inputs(GLFWwindow* window,float speed);
 };
 #endif

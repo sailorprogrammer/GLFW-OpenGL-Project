@@ -19,11 +19,15 @@ namespace fs = std::filesystem;
 #include"VBO.h"
 #include"EBO.h"
 #include"Camera.h"
-
+#include<string>
 // Hello Test Commit :D
 
-const unsigned int width = 2000;
+const unsigned int width = 1820;
 const unsigned int height = 1080;
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+
+void Logs(std::string message, short int error);
+
 float BG_RED = 0.0f;
 float BG_GREEN = 0.0f;
 float BG_BLUE = 0.0f;
@@ -43,17 +47,23 @@ bool vsync = true;
 bool depthtest = true;
 
 
-float pyramidpos1 = 0.2f;
-float pyramidpos2 = 0.2f;
-float pyramidpos3 = 0.2f;
+float pyramidpos1 = 0.7f;
+float pyramidpos2 = -0.8f;
+float pyramidpos3 = -1.1f;
 float pyramidscale = 1.0f;
 float pyramidrotation = 0.0f;
 
 float lightpos1 = 0.2f;
-float lightpos2 = 1.2f;
-float lightpos3 = 1.2f;
-float lightscale = 1.0f;
+float lightpos2 = 0.5f;
+float lightpos3 = 0.2f;
+float lightscale = 2.0f;
 float lightrotation = 0.0f;
+
+float Camerasensitivity = 100.0f;
+float Cameraspeed = 0.01f;
+float Camerafov = 45.0f;
+float Cameranearplane = 0.1f;
+float Camerafarplane = 100.0f;
 
 // Vertices coordinates
 GLfloat vertices[] =
@@ -127,27 +137,37 @@ int main()
 
 	// Tell GLFW what version of OpenGL we are using 
 	// In this case we are using OpenGL 3.3
-	const char* glsl_version = "#version 330";
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+
+	// Tell GLFW what version of GLSL we are using 
+	// In this case we are using GLSL 3.3
+	const char* glsl_version = "#version 330";
+
 	// Tell GLFW we are using the CORE profile
 	// So that means we only have the modern functions
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	// Create a GLFWwindow object of 800 by 800 pixels, naming it "YoutubeOpenGL"
+	// Create a GLFWwindow object of width by height pixels, naming it "SailorPunishersThirdProgram"
 	GLFWwindow* window = glfwCreateWindow(width, height, "SailorPunishersThirdProgram", NULL, NULL);
 	// Error check if the window fails to create
 	if (window == NULL)
 	{
-		std::cout << "Failed to create GLFW window" << std::endl;
+		Logs("Failed to create GLFW window", 1);
 		glfwTerminate();
 		return -1;
 	}
+	else 
+	{
+		Logs("Created GLFW Window", 2);
+	}
 	// Introduce the window into the current context
 	glfwMakeContextCurrent(window);
-
+	Logs("Made GLFW current context to window", 2);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	//Load GLAD so it configures OpenGL
 	gladLoadGL();
+	Logs("Loaded Glad", 2);
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -157,7 +177,7 @@ int main()
 
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
-
+	Logs("Set ImGui Color Style to Dark", 2);
 	// Setup Platform/Renderer backends
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 #ifdef __EMSCRIPTEN__
@@ -167,6 +187,7 @@ int main()
 	// Specify the viewport of OpenGL in the Window
 	// In this case the viewport goes from x = 0, y = 0, to x = 800, y = 800
 	glViewport(0, 0, width, height);
+	Logs("viewport set to 0,0 " + std::to_string(width) + "x" + std::to_string(height), 2);
 
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("default.vert", "default.frag");
@@ -176,20 +197,26 @@ int main()
 	// Generates Vertex Array Object and binds it
 	VAO VAO1;
 	VAO1.Bind();
+	Logs("Bound VAO1", 2);
 	// Generates Vertex Buffer Object and links it to vertices
 	VBO VBO1(vertices, sizeof(vertices));
+	Logs("Generated Vertex Buffer Object and linked it to vertices", 2);
 	// Generates Element Buffer Object and links it to indices
 	EBO EBO1(indices, sizeof(indices));
+	Logs("Generated Element Buffer Object and linked it to vertices", 2);
 	// Links VBO attributes such as coordinates and colors to VAO
 	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 11 * sizeof(float), (void*)0);
 	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 11 * sizeof(float), (void*)(3 * sizeof(float)));
 	VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, 11 * sizeof(float), (void*)(6 * sizeof(float)));
 	VAO1.LinkAttrib(VBO1, 3, 3, GL_FLOAT, 11 * sizeof(float), (void*)(8 * sizeof(float)));
+	Logs("Linked VBO attributes such as coordinates and colors to VAO", 2);
 	// Unbind all to prevent accidentally modifying them
 	VAO1.Unbind();
+	Logs("Unbound VAO1", 2);
 	VBO1.Unbind();
+	Logs("Unbound VBO1", 2);
 	EBO1.Unbind();
-
+	Logs("Unbound EBO1", 2);
 	// Shader for light cube
 	Shader lightShader("light.vert", "light.frag");
 	// Generates Vertex Array Object and binds it
@@ -213,13 +240,13 @@ int main()
 	Texture lunaTex((parentDir + texPath + "luna.png").c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
 	lunaTex.texUnit(shaderProgram, "tex0", 0);
 	
-	// Creates camera object
 	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
 	{
 		glfwSwapInterval(vsync);
+		// Creates camera object
 		glm::vec4 lightColor = glm::vec4(SC_RED, SC_GREEN, SC_BLUE, SC_ALPHA);
 		glm::vec3 lightPos = glm::vec3(lightpos1, lightpos2, lightpos3);
 		glm::mat4 lightModel = glm::mat4(lightscale);
@@ -228,7 +255,7 @@ int main()
 
 		glm::vec3 pyramidPos = glm::vec3(pyramidpos1, pyramidpos2, pyramidpos3);
 		glm::mat4 pyramidModel = glm::mat4(pyramidscale);
-		pyramidModel = glm::rotate(pyramidModel, glm::radians(pyramidrotation), glm::vec3(pyramidpos1, pyramidpos2, pyramidpos3));
+		pyramidModel = glm::rotate(pyramidModel, (float)glfwGetTime(), glm::vec3(pyramidpos1, pyramidpos2, pyramidpos3));
 		pyramidModel = glm::translate(pyramidModel, pyramidPos);
 
 		lightShader.Activate();
@@ -253,6 +280,17 @@ int main()
 		ImGui::SetWindowSize(ImVec2(800, 800));
 		if (ImGui::Begin("Menu"))
 		{
+			
+			if (ImGui::CollapsingHeader("------------------------- Controls --------------------------------------------------"),1)
+			{
+				ImGui::Text("The controls are WASD to move around , Space/Ctrl to go up"); 
+				ImGui::Text("and down and hold right click to look around");
+				ImGui::SliderFloat("Camera-Speed", &Cameraspeed, 0.0f, 1.0f);
+				ImGui::SliderFloat("Camera-Sensitivity", &Camerasensitivity, 0.0f, 1000.0f);
+				ImGui::SliderFloat("Camera-FOV", &Camerafov, -360.f, 360.f);
+				ImGui::SliderFloat("Camera-nearplane", &Cameranearplane, 0.f, 10.f);
+				ImGui::SliderFloat("Camera-farplane", &Camerafarplane, 0.f, 1000.f);
+			}
 			if (ImGui::CollapsingHeader("------------------------- Background Colour --------------------------------------------------"))
 			{
 				ImGui::SliderFloat("BG_Red", &BG_RED, 0.0f, 1.0f);
@@ -295,7 +333,7 @@ int main()
 				ImGui::SliderFloat("pyramid-Position X Axis", &pyramidpos1, -10.0f, 10.0f);
 				ImGui::SliderFloat("pyramid-Position Y Axis", &pyramidpos2, -10.0f, 10.0f);
 				ImGui::SliderFloat("pyramid-Position Z Axis", &pyramidpos3, -10.0f, 10.0f);
-				ImGui::SliderFloat("pyramid-Scale Axis", &pyramidscale, -10.0f, 10.0f);
+				ImGui::SliderFloat("pyramid-Scale Axis", &pyramidscale, -10.0f, 1000.0f);
 				ImGui::SliderFloat("pyramid-Rotation", &pyramidrotation, -360.0f, 360.0f);
 			}
 			if (ImGui::CollapsingHeader("------------------------- Light Position --------------------------------------------------"))
@@ -336,10 +374,11 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Handles camera inputs
-		camera.Inputs(window);
+		camera.Inputs(window, Cameraspeed);
 		// Updates and exports the camera matrix to the Vertex Shader
-		camera.updateMatrix(45.0f, 0.1f, 100.0f);
-
+		camera.updateMatrix(Camerafov, Cameranearplane, Camerafarplane);
+		camera.speed = Cameraspeed;
+		camera.sensitivity = Camerasensitivity;
 		// Tells OpenGL which Shader Program we want to use
 		shaderProgram.Activate();
 		// Exports the camera Position to the Fragment Shader for specular lighting
@@ -371,17 +410,50 @@ int main()
 
 	// Delete all the objects we've created
 	VAO1.Delete();
+	Logs("Deleted VAO1", 2);
 	VBO1.Delete();
+	Logs("Deleted VBO1", 2);
 	EBO1.Delete();
+	Logs("Deleted EBO1", 2);
 	lunaTex.Delete();
+	Logs("Deleted luna Texture", 2);
 	shaderProgram.Delete();
+	Logs("Deleted shaderProgram", 2);
 	lightVAO.Delete();
+	Logs("Deleted lightVAO", 2);
 	lightVBO.Delete();
+	Logs("Deleted lightVBO", 2);
 	lightEBO.Delete();
+	Logs("Deleted lightEBO", 2);
 	lightShader.Delete();
+	Logs("Deleted lightShader", 2);
 	// Delete window before ending the program
 	glfwDestroyWindow(window);
+	Logs("Destroyed GLFW Window", 2);
 	// Terminate GLFW before ending the program
 	glfwTerminate();
+	Logs("Terminated GLFW", 2);
 	return 0;
+}
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	// make sure the viewport matches the new window dimensions; note that width and 
+	// height will be significantly larger than specified on retina displays.
+	glViewport(0, 0, width, height);
+	Logs("viewport set to 0,0 " + std::to_string(width) + "x" + std::to_string(height), 2);
+}
+void Logs(std::string message, short int error)
+{
+	switch (error) {
+	case 0:
+		std::cout << "Sailor Success: " << "{" << message << "}" << '\n';
+		break;
+	case 1:
+		std::cout << "Sailor Failure: " << "{" << message << "}" << '\n';
+		break;
+	case 2:
+		std::cout << "Sailor Info: " << "{" << message << "}" << '\n';
+		break;
+	}
+
 }
