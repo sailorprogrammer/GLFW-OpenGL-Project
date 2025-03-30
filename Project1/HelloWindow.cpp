@@ -156,6 +156,9 @@ int main()
 
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("default.vert", "default.frag");
+	const int specularLighting = glGetUniformLocation(shaderProgram.ID, "specularLight");
+	const int diffuseLighting = glGetUniformLocation(shaderProgram.ID, "diffuseLight");
+	const int ambientLighting = glGetUniformLocation(shaderProgram.ID, "ambientLight");
 	// Generates Vertex Array Object and binds it
 	VAO VAO1;
 	VAO1.Bind();
@@ -275,9 +278,20 @@ int main()
 			ImGui::Checkbox("vsync", &vsync);
 			ImGui::Checkbox("depth_test", &depthtest);
 			ImGui::Text("------------------------- Lighting --------------------------------------------------");
-			ImGui::SliderFloat("Ambient_Light", &ambientLight, 0.0f, 1.0f);
-			ImGui::SliderFloat("Diffuse_Light", &diffuseLight, 0.0f, 1.0f);
-			ImGui::SliderFloat("Specular_Light", &specularLight, 0.0f, 1.0f);
+			if (ImGui::SliderFloat("Ambient_Light", &ambientLight, 0.0f, 1.0f))
+			{
+				glUniform1f(ambientLighting, ambientLight);
+			}
+			if (ImGui::SliderFloat("Diffuse_Light", &diffuseLight, 0.0f, 1.0f))
+			{
+				
+				glUniform1f(diffuseLighting, diffuseLight);
+			}
+			if (ImGui::SliderFloat("Specular_Light", &specularLight, 0.0f, 1.0f))
+			{
+			
+				glUniform1f(specularLighting, specularLight);
+			}
 			
 		}ImGui::End();
 
