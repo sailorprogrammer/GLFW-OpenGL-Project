@@ -1,8 +1,3 @@
-//------- Ignore this ----------
-#include<filesystem>
-namespace fs = std::filesystem;
-//------------------------------
-
 #include<iostream>
 #include <glad/glad.h>
 #include<GLFW/glfw3.h>
@@ -22,15 +17,13 @@ namespace fs = std::filesystem;
 #include"Camera.h"
 #include<string>
 #include "Menu.h"
-// Hello Test Commit :D
 
 const unsigned int width = 1820;
 const unsigned int height = 1080;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 void Logs(std::string message, short int error);
-
-
+std::string texturepath = RESOURCES_PATH"/Textures/";
 
 // Vertices coordinates
 GLfloat vertices[] =
@@ -95,7 +88,6 @@ GLuint lightIndices[] =
 	4, 5, 6,
 	4, 6, 7
 };
-
 
 int main()
 {
@@ -201,12 +193,8 @@ int main()
 	lightVBO.Unbind();
 	lightEBO.Unbind();
 
-	std::string parentDir = (fs::current_path().fs::path::parent_path()).string();
-	
-	std::string texPath = "/Textures/";
-
 	// Texture
-	Texture lunaTex((parentDir + texPath + "luna.png").c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
+	Texture lunaTex((RESOURCES_PATH"/Textures/luna.png"), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
 	lunaTex.texUnit(shaderProgram, "tex0", 0);
 	
 	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
