@@ -1,5 +1,5 @@
 # cmakeSetup
-
+Credit goes to Low Level IQ i modified his cmake with his youtube guides
 ---
 
 ## What is it?
