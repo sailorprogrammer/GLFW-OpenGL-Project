@@ -7,8 +7,7 @@ Credit goes to Low Level IQ i modified his cmake with his youtube guides
 This is a CMake setup that loads glfw, OpenGL, stb_image, stb_truetype, and a custom 2d library. It works both on Windows and Linux.
 
 ## Why use cmakeSetup?
-
-All I do is configure the project in a good way. It is cross-platform, easy to add libraries, and the input and window opening are implemented. All the rest is up to you, with no weird abstractions, you get the init() update(), and close() functions and you do whatever you want with them.
+It is cross-platform with linux,windows and it is easy to add libraries
 
 
 ![](https://github.com/meemknight/photos/blob/master/cmakeSetup1.png)
@@ -41,7 +40,7 @@ Then, from this dropdown select mygame.exe
 <kbd>Ctrl + F5</kbd> to build (<kbd>F5</kbd> oppens the debugger, you usually want to press <kbd>Ctrl + F5</kbd> because it oppens faster like this.
 
 <p>Adding files:<br>
-You should add .cpp in src/gameLayer and .h in include/gameLayer. Whenever you add a new file CMake will ask you if you want to add that thing, say NO every time! I am already adding all of the things.
+You should add .cpp in src and .h in include Whenever you add a new file CMake will ask you if you want to add that thing, say NO every time! I am already adding all of the things.
 If you accidentally say YES, just remove that file from the CMake.lists
 </p>
 
@@ -51,9 +50,7 @@ After you add a file, the changes should be automatically added but if you want 
 
 # How to use:
 
-  gameLayer.cpp has the game main loop. Add your files in scr/gamelayer and include/gamelayer.
-  Look at the example provided to see how to acces user input.
-  Also you have to use the RESOURCES_PATH macro to get to your assets path.
+you need to have a /textures/ in a folder that is a directory behind the executable file to load textures
 
   [FULL EXAMPLE VIDEO!](https://www.youtube.com/watch?v=zJoXMfCI9LM)
 
