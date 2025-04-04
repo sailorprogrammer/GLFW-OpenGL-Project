@@ -4,7 +4,7 @@ Credit goes to Low Level IQ i modified his cmake with his youtube guides
 
 ## What is it?
 
-This is a CMake setup that loads glfw, OpenGL, stb_image, stb_truetype, and a custom 2d library. It works both on Windows and Linux.
+This is a CMake setup that loads glfw, OpenGL, stb_image, stb_truetype, and ImGUI. It works both on Windows and Linux.
 
 ## Why use cmakeSetup?
 It is cross-platform with linux,windows and it is easy to add libraries
