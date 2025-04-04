@@ -8,11 +8,7 @@ This is a CMake setup that loads glfw, OpenGL, stb_image, stb_truetype, and a cu
 
 ## Why use cmakeSetup?
 It is cross-platform with linux,windows and it is easy to add libraries
-
-
-![](https://github.com/meemknight/photos/blob/master/cmakeSetup1.png)
 ---
-
   [FULL EXAMPLE VIDEO!](https://www.youtube.com/watch?v=zJoXMfCI9LM)
   
   [LONGER VERSION!!](https://www.youtube.com/watch?v=XOs2qynEmNE)
