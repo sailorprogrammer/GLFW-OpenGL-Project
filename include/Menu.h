@@ -49,6 +49,7 @@ int specularLighting;
 int diffuseLighting;
 
 
+
 void MenuIMGUI(void) {
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
@@ -168,5 +169,21 @@ void MenuIMGUI(void) {
 			ImGui::End();
 		}
 		ImGui::End();
+	}
+	if (wireframe == true)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	if (wireframe == false)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+	if (depthtest == true)
+	{
+		glEnable(GL_DEPTH_TEST);
+	}
+	if (depthtest == false)
+	{
+		glDisable(GL_DEPTH_TEST);
 	}
 }

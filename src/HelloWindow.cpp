@@ -91,6 +91,10 @@ GLuint lightIndices[] =
 
 int main()
 {
+
+
+
+
 	// Initialize GLFW
 	glfwInit();
 
@@ -127,6 +131,14 @@ int main()
 	//Load GLAD so it configures OpenGL
 	gladLoadGL();
 	Logs("Loaded Glad", 2);
+
+	// Icon For Main Window
+	GLFWimage images[1];
+	images[0].pixels = stbi_load(RESOURCES_PATH"/Icon/LunaIcon.png", &images[0].width, &images[0].height, 0, 4);
+	glfwSetWindowIcon(window, 1, images);
+	stbi_image_free(images[0].pixels);
+
+
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -144,10 +156,6 @@ int main()
 	ImGui_ImplGlfw_InstallEmscriptenCallbacks(window, "#canvas");
 #endif
 	ImGui_ImplOpenGL3_Init(glsl_version);
-	// Specify the viewport of OpenGL in the Window
-	// In this case the viewport goes from x = 0, y = 0, to x = 800, y = 800
-	glViewport(0, 0, width, height);
-	Logs("viewport set to 0,0 " + std::to_string(width) + "x" + std::to_string(height), 2);
 
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram(RESOURCES_PATH"/Shaders/default.vert", RESOURCES_PATH"/Shaders/default.frag");
@@ -226,45 +234,28 @@ int main()
 
 		if (glfwGetWindowAttrib(window, GLFW_ICONIFIED) != 0)
 		{
-
 			continue;
 		}
 
-
-		// Rendering
+		// Rendering Stuff
 		MenuIMGUI();
 		ImGui::Render();
 		int display_w, display_h;
 		glfwGetFramebufferSize(window, &display_w, &display_h);
-
-		if (wireframe == true)
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		}
-		if (wireframe == false)
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		}
-		if (depthtest == true)
-		{
-			glEnable(GL_DEPTH_TEST);
-		}
-		if (depthtest == false)
-		{
-			glDisable(GL_DEPTH_TEST);
-		}
-
 		// Specify the color of the background
 		glClearColor(BG_RED,BG_GREEN,BG_BLUE,BG_ALPHA);
 		// Clean the back buffer and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		// Camera Stuff
 		// Handles camera inputs
 		camera.Inputs(window, Cameraspeed);
 		// Updates and exports the camera matrix to the Vertex Shader
 		camera.updateMatrix(Camerafov, Cameranearplane, Camerafarplane);
 		camera.speed = Cameraspeed;
 		camera.sensitivity = Camerasensitivity;
+
+
 		// Tells OpenGL which Shader Program we want to use
 		shaderProgram.Activate();
 		// Exports the camera Position to the Fragment Shader for specular lighting
