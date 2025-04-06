@@ -1,7 +1,7 @@
 #https://github.com/meemknight/cmakeSetup
 #Version 1.1.0
 # Cmake was based off of LowLevelIQ on youtubes template thanks btw :3
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.16.4.0)
 set(CMAKE_CXX_STANDARD 17)
 
 #! ! ! ! ! ! !
