@@ -10,7 +10,7 @@
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 #include"Texture.h"
-#include"shaderClass.h"
+#include"ShaderClass.h"
 #include"VAO.h"
 #include"VBO.h"
 #include"EBO.h"
