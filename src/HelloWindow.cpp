@@ -27,40 +27,66 @@ std::string texturepath = RESOURCES_PATH"/Textures/";
 
 // Vertices coordinates
 GLfloat vertices[] =
-{ //     COORDINATES     /        COLORS          /    TexCoord   /        NORMALS       //
-	-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f, 	 0.0f, 0.0f,      0.0f, -1.0f, 0.0f, // Bottom side
-	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 0.0f, 5.0f,      0.0f, -1.0f, 0.0f, // Bottom side
-	 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 5.0f, 5.0f,      0.0f, -1.0f, 0.0f, // Bottom side
-	 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	 5.0f, 0.0f,      0.0f, -1.0f, 0.0f, // Bottom side
+{
+	//    COORDINATES        /         COLORS         /   TEXCOORD      /      NORMALS        //
+	// Front Face
+	-0.5f, -0.5f,  0.5f,    0.83f, 0.70f, 0.44f,    0.0f, 0.0f,    0.0f,  0.0f, 1.0f,  // Vertex 0
+	 0.5f, -0.5f,  0.5f,    0.83f, 0.70f, 0.44f,    1.0f, 0.0f,    0.0f,  0.0f, 1.0f,  // Vertex 1
+	 0.5f,  0.5f,  0.5f,    0.83f, 0.70f, 0.44f,    1.0f, 1.0f,    0.0f,  0.0f, 1.0f,  // Vertex 2
+	-0.5f,  0.5f,  0.5f,    0.83f, 0.70f, 0.44f,    0.0f, 1.0f,    0.0f,  0.0f, 1.0f,  // Vertex 3
 
-	-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f, 	 0.0f, 0.0f,     -0.8f, 0.5f,  0.0f, // Left Side
-	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 5.0f, 0.0f,     -0.8f, 0.5f,  0.0f, // Left Side
-	 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	 2.5f, 5.0f,     -0.8f, 0.5f,  0.0f, // Left Side
+	// Back Face
+	-0.5f, -0.5f, -0.5f,    0.83f, 0.70f, 0.44f,    0.0f, 0.0f,   -1.0f,  0.0f, -1.0f,  // Vertex 4
+	 0.5f, -0.5f, -0.5f,    0.83f, 0.70f, 0.44f,    1.0f, 0.0f,   -1.0f,  0.0f, -1.0f,  // Vertex 5
+	 0.5f,  0.5f, -0.5f,    0.83f, 0.70f, 0.44f,    1.0f, 1.0f,   -1.0f,  0.0f, -1.0f,  // Vertex 6
+	-0.5f,  0.5f, -0.5f,    0.83f, 0.70f, 0.44f,    0.0f, 1.0f,   -1.0f,  0.0f, -1.0f,  // Vertex 7
 
-	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 5.0f, 0.0f,      0.0f, 0.5f, -0.8f, // Non-facing side
-	 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 0.0f, 0.0f,      0.0f, 0.5f, -0.8f, // Non-facing side
-	 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	 2.5f, 5.0f,      0.0f, 0.5f, -0.8f, // Non-facing side
+	// Left Face
+	-0.5f, -0.5f, -0.5f,    0.83f, 0.70f, 0.44f,    0.0f, 0.0f,   -1.0f, -1.0f,  0.0f,  // Vertex 8
+	-0.5f, -0.5f,  0.5f,    0.83f, 0.70f, 0.44f,    1.0f, 0.0f,   -1.0f, -1.0f,  0.0f,  // Vertex 9
+	-0.5f,  0.5f,  0.5f,    0.83f, 0.70f, 0.44f,    1.0f, 1.0f,   -1.0f, -1.0f,  0.0f,  // Vertex 10
+	-0.5f,  0.5f, -0.5f,    0.83f, 0.70f, 0.44f,    0.0f, 1.0f,   -1.0f, -1.0f,  0.0f,  // Vertex 11
 
-	 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 0.0f, 0.0f,      0.8f, 0.5f,  0.0f, // Right side
-	 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	 5.0f, 0.0f,      0.8f, 0.5f,  0.0f, // Right side
-	 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	 2.5f, 5.0f,      0.8f, 0.5f,  0.0f, // Right side
+	// Right Face
+	 0.5f, -0.5f, -0.5f,    0.83f, 0.70f, 0.44f,    0.0f, 0.0f,    1.0f, -1.0f,  0.0f,  // Vertex 12
+	 0.5f, -0.5f,  0.5f,    0.83f, 0.70f, 0.44f,    1.0f, 0.0f,    1.0f, -1.0f,  0.0f,  // Vertex 13
+	 0.5f,  0.5f,  0.5f,    0.83f, 0.70f, 0.44f,    1.0f, 1.0f,    1.0f, -1.0f,  0.0f,  // Vertex 14
+	 0.5f,  0.5f, -0.5f,    0.83f, 0.70f, 0.44f,    0.0f, 1.0f,    1.0f, -1.0f,  0.0f,  // Vertex 15
 
-	 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	 5.0f, 0.0f,      0.0f, 0.5f,  0.8f, // Facing side
-	-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f, 	 0.0f, 0.0f,      0.0f, 0.5f,  0.8f, // Facing side
-	 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	 2.5f, 5.0f,      0.0f, 0.5f,  0.8f  // Facing side
+	 // Top Face
+	 -0.5f,  0.5f,  0.5f,    0.83f, 0.70f, 0.44f,    0.0f, 0.0f,    0.0f,  1.0f,  0.0f,  // Vertex 16
+	  0.5f,  0.5f,  0.5f,    0.83f, 0.70f, 0.44f,    1.0f, 0.0f,    0.0f,  1.0f,  0.0f,  // Vertex 17
+	  0.5f,  0.5f, -0.5f,    0.83f, 0.70f, 0.44f,    1.0f, 1.0f,    0.0f,  1.0f,  0.0f,  // Vertex 18
+	 -0.5f,  0.5f, -0.5f,    0.83f, 0.70f, 0.44f,    0.0f, 1.0f,    0.0f,  1.0f,  0.0f,  // Vertex 19
+
+	 // Bottom Face
+	 -0.5f, -0.5f,  0.5f,    0.83f, 0.70f, 0.44f,    0.0f, 0.0f,    0.0f, -1.0f,  0.0f,  // Vertex 20
+	  0.5f, -0.5f,  0.5f,    0.83f, 0.70f, 0.44f,    1.0f, 0.0f,    0.0f, -1.0f,  0.0f,  // Vertex 21
+	  0.5f, -0.5f, -0.5f,    0.83f, 0.70f, 0.44f,    1.0f, 1.0f,    0.0f, -1.0f,  0.0f,  // Vertex 22
+	 -0.5f, -0.5f, -0.5f,    0.83f, 0.70f, 0.44f,    0.0f, 1.0f,    0.0f, -1.0f,  0.0f   // Vertex 23
 };
 
-// Indices for vertices order
+// Cube Indices (each face has 2 triangles)
 GLuint indices[] =
 {
-	0, 1, 2, // Bottom side
-	0, 2, 3, // Bottom side
-	4, 6, 5, // Left side
-	7, 9, 8, // Non-facing side
-	10, 12, 11, // Right side
-	13, 15, 14 // Facing side
-};
+	// Front Face (2 triangles)
+	0, 1, 2, 0, 2, 3,
 
+	// Back Face (2 triangles)
+	4, 5, 6, 4, 6, 7,
+
+	// Left Face (2 triangles)
+	8, 9, 10, 8, 10, 11,
+
+	// Right Face (2 triangles)
+	12, 13, 14, 12, 14, 15,
+
+	// Top Face (2 triangles)
+	3, 2, 6, 3, 6, 7,
+
+	// Bottom Face (2 triangles)
+	0, 1, 5, 0, 5, 4
+};
 GLfloat lightVertices[] =
 { //     COORDINATES     //
 	-0.1f, -0.1f,  0.1f,
@@ -88,7 +114,11 @@ GLuint lightIndices[] =
 	4, 5, 6,
 	4, 6, 7
 };
-
+float pyramidposX = 0.0001f;
+float pyramidposY = 0.0001f;
+float pyramidposZ = 0.0001f;
+float pyramidscale = 1.0f;
+float pyramidrotation = 0.0f;
 int main()
 {
 
@@ -208,29 +238,27 @@ int main()
 	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
 
 	// Main while loop
+	double crntTime = 0;
+	double timeDiff = 0;
+	double prevTime = 0;
+	double counter = 0;
+	// Main while loop
 	while (!glfwWindowShouldClose(window))
 	{
+		crntTime = glfwGetTime();
+		timeDiff = crntTime - prevTime;
+		counter++;
+		if (timeDiff >= 1.0 / 30.0)
+		{
+			std::string FPS = std::to_string((1.0 / timeDiff) * counter);
+			std::string ms = std::to_string((timeDiff / counter) * 1000);
+			std::string newTitle = "Sailors Program :D - " + FPS + "FPS/" + ms + "ms";
+			glfwSetWindowTitle(window, newTitle.c_str());
+			prevTime = crntTime;
+			counter = 0;
+		}
 		glfwSwapInterval(vsync);
-		// Creates camera object
-		glm::vec4 lightColor = glm::vec4(SC_RED, SC_GREEN, SC_BLUE, SC_ALPHA);
-		glm::vec3 lightPos = glm::vec3(lightpos1, lightpos2, lightpos3);
-		glm::mat4 lightModel = glm::mat4(lightscale);
-		lightModel = glm::rotate(lightModel, glm::radians(lightrotation), glm::vec3(lightpos1, lightpos2, lightpos3));
-		lightModel = glm::translate(lightModel, lightPos);
 
-		glm::vec3 pyramidPos = glm::vec3(pyramidpos1, pyramidpos2, pyramidpos3);
-		glm::mat4 pyramidModel = glm::mat4(pyramidscale);
-		pyramidModel = glm::rotate(pyramidModel, (float)glfwGetTime(), glm::vec3(pyramidpos1, pyramidpos2, pyramidpos3));
-		pyramidModel = glm::translate(pyramidModel, pyramidPos);
-
-		lightShader.Activate();
-		glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightModel));
-		glUniform4f(glGetUniformLocation(lightShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-
-		shaderProgram.Activate();
-		glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(pyramidModel));
-		glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-		glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
 		if (glfwGetWindowAttrib(window, GLFW_ICONIFIED) != 0)
 		{
@@ -243,9 +271,47 @@ int main()
 		int display_w, display_h;
 		glfwGetFramebufferSize(window, &display_w, &display_h);
 		// Specify the color of the background
-		glClearColor(BG_RED,BG_GREEN,BG_BLUE,BG_ALPHA);
-		// Clean the back buffer and depth buffer
+		glClearColor(BG_RED, BG_GREEN, BG_BLUE, BG_ALPHA);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// Creates camera object
+		glm::vec4 lightColor = glm::vec4(SC_RED, SC_GREEN, SC_BLUE, SC_ALPHA);
+		glm::vec3 lightPos = glm::vec3(lightpos1, lightpos2, lightpos3);
+		glm::mat4 lightModel = glm::mat4(lightscale);
+		lightModel = glm::rotate(lightModel, glm::radians(lightrotation), glm::vec3(lightpos1, lightpos2, lightpos3));
+		lightModel = glm::translate(lightModel, lightPos);
+
+
+		// Binds texture so that is appears in rendering
+		lunaTex.Bind();
+		// Bind the VAO so OpenGL knows to use it
+		VAO1.Bind();
+
+		//lightShader.Activate();
+		//glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightModel));
+		//glUniform4f(glGetUniformLocation(lightShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+		shaderProgram.Activate();
+		glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+		glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+
+		glm::vec3 pyramidPos = glm::vec3(pyramidposX, pyramidposY, pyramidposZ);
+		glm::mat4 pyramidModel = glm::mat4(pyramidscale);
+		for (int z = 0; z < 10; z++) {
+			for (int x = 0; x < 10; x++) {
+				for (int y = 0; y < 10; y++) {
+					glm::mat4 pyramidModel = glm::mat4(1.0f);
+
+
+					glm::vec3 offset = glm::vec3(pyramidposX +x, pyramidposY +y, pyramidposZ + z);
+					pyramidModel = glm::translate(pyramidModel, offset);
+					pyramidModel = glm::rotate(pyramidModel, (float)glfwGetTime(), glm::vec3(pyramidposX, pyramidposY, pyramidposZ));
+
+					shaderProgram.Activate();
+					glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(pyramidModel));
+					glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
+				}
+			}
+		}
 
 		// Camera Stuff
 		// Handles camera inputs
@@ -255,19 +321,17 @@ int main()
 		camera.speed = Cameraspeed;
 		camera.sensitivity = Camerasensitivity;
 
-
 		// Tells OpenGL which Shader Program we want to use
 		shaderProgram.Activate();
+
 		// Exports the camera Position to the Fragment Shader for specular lighting
 		glUniform3f(glGetUniformLocation(shaderProgram.ID, "camPos"), camera.Position.x, camera.Position.y, camera.Position.z);
+
 		// Export the camMatrix to the Vertex Shader of the pyramid
 		camera.Matrix(shaderProgram, "camMatrix");
-		// Binds texture so that is appears in rendering
-		lunaTex.Bind();
-		// Bind the VAO so OpenGL knows to use it
-		VAO1.Bind();
+
 		// Draw primitives, number of indices, datatype of indices, index of indices
-		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
+
 
 		// Tells OpenGL which Shader Program we want to use
 		lightShader.Activate();

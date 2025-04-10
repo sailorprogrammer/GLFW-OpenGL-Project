@@ -8,7 +8,7 @@ float SC_GREEN = 1.0f;
 float SC_BLUE = 1.0f;
 float SC_ALPHA = 1.0f;
 
-float ambientLight = 0.2f;
+float ambientLight = 1.0f;
 float specularLight = 0.2f;
 float diffuseLight = 0.2f;
 
@@ -17,11 +17,8 @@ bool vsync = true;
 bool depthtest = true;
 
 
-float pyramidpos1 = 0.7f;
-float pyramidpos2 = -0.8f;
-float pyramidpos3 = -1.1f;
-float pyramidscale = 1.0f;
-float pyramidrotation = 0.0f;
+
+
 
 float lightpos1 = 0.2f;
 float lightpos2 = 0.5f;
@@ -144,18 +141,7 @@ void MenuIMGUI(void) {
 			}
 			ImGui::End();
 		}
-		if (show_pyramid_window == true)
-		{
-			ImGui::SetNextWindowSize(ImVec2(525, 175));
-			ImGui::Begin("show_pyramid_window");
-			ImGui::Checkbox("show_pyramid_window", &show_pyramid_window);
-			ImGui::SliderFloat("pyramid-Position X Axis", &pyramidpos1, -10.0f, 10.0f);
-			ImGui::SliderFloat("pyramid-Position Y Axis", &pyramidpos2, -10.0f, 10.0f);
-			ImGui::SliderFloat("pyramid-Position Z Axis", &pyramidpos3, -10.0f, 10.0f);
-			ImGui::SliderFloat("pyramid-Scale Axis", &pyramidscale, -10.0f, 1000.0f);
-			ImGui::SliderFloat("pyramid-Rotation", &pyramidrotation, -360.0f, 360.0f);
-			ImGui::End();
-		}
+
 		if (show_light_window == true)
 		{
 			ImGui::SetNextWindowSize(ImVec2(525, 175));
